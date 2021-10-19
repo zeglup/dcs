@@ -101,7 +101,7 @@ ctld.radioSoundFC3 = "beaconsilent.ogg" -- name of the second silent radio file,
 
 ctld.deployedBeaconBattery = 30 -- the battery on deployed beacons will last for this number minutes before needing to be re-deployed
 
-ctld.enabledRadioBeaconDrop = true -- if its set to false then beacons cannot be dropped by units
+ctld.enabledRadioBeaconDrop = false -- if its set to false then beacons cannot be dropped by units
 
 ctld.allowRandomAiTeamPickups = false -- Allows the AI to randomize the loading of infantry teams (specified below) at pickup zones
 
@@ -134,7 +134,7 @@ ctld.JTAC_LIMIT_BLUE = 10 -- max number of JTAC Crates for the BLUE Side
 
 ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
-ctld.JTAC_maxDistance = 10000 -- How far a JTAC can "see" in meters (with Line of Sight)
+ctld.JTAC_maxDistance = 20000 -- How far a JTAC can "see" in meters (with Line of Sight)
 
 ctld.JTAC_smokeOn_RED = true -- enables marking of target with smoke for RED forces
 ctld.JTAC_smokeOn_BLUE = true -- enables marking of target with smoke for BLUE forces
@@ -145,7 +145,7 @@ ctld.JTAC_smokeColour_BLUE = 1 -- BLUE side smoke colour -- Green = 0 , Red = 1,
 ctld.JTAC_jtacStatusF10 = true -- enables F10 JTAC Status menu
 
 ctld.JTAC_location = true -- shows location of target in JTAC message
-ctld.location_DMS = false -- shows coordinates as Degrees Minutes Seconds instead of Degrees Decimal minutes
+ctld.location_DMS = true -- shows coordinates as Degrees Minutes Seconds instead of Degrees Decimal minutes
 
 ctld.JTAC_lock = "all" -- "vehicle" OR "troop" OR "all" forces JTAC to only lock vehicles or troops or all ground units
 
@@ -168,6 +168,7 @@ ctld.JTAC_lock = "all" -- "vehicle" OR "troop" OR "all" forces JTAC to only lock
 -- Flag Number - Optional last field. If set the current number of groups remaining can be obtained from the flag value
 
 --pickupZones = { "Zone name or Ship Unit Name", "smoke color", "limit (-1 unlimited)", "ACTIVE (yes/no)", "side (0 = Both sides / 1 = Red / 2 = Blue )", flag number (optional) }
+
 ctld.pickupZones = {
     { "pickzone1", "blue", -1, "yes", 0 },
     { "pickzone2", "red", -1, "yes", 0 },
@@ -5314,8 +5315,10 @@ function ctld.JTACAutoLase(_jtacGroupName, _laserCode, _smoke, _lock, _colour, _
             end
 
             local message = _jtacGroupName .. action .. _enemyUnit:getTypeName()
-            local fullMessage = message .. '. CODE: ' .. _laserCode .. ". POSITION: " .. ctld.getPositionString(_enemyUnit)
-            ctld.notifyCoalition(fullMessage, 10, _jtacUnit:getCoalition(), _radio, message)
+            local fullMessage = message .. '. LASER ' .. _laserCode .. ". POSITION " .. ctld.getPositionString(_enemyUnit)
+			local explodedCoords = ctld.getPositionString(_enemyUnit)
+			local radioMessage = message  .. '. LASER ' .. _laserCode .. ". POSITION " .. ctld.getPositionString(_enemyUnit)
+            ctld.notifyCoalition(fullMessage, 25, _jtacUnit:getCoalition(), _radio, fullMessage)
 
 	        -- JTAC Unit stop his route -----------------
 	        trigger.action.groupStopMoving(Group.getByName(_jtacGroupName)) -- stop JTAC
@@ -5405,8 +5408,8 @@ function ctld.notifyCoalition(_message, _displayFor, _side, _radio, _shortMessag
         local _name = _radio.name or "JTAC"
         local _gender = _radio.gender or "male"
         local _culture = _radio.culture or "en-US"
-        local _voice = _radio.voice
-        local _googleTTS = _radio.googleTTS or false
+        local _voice = _radio.voice or "en-US-Wavenet-D"
+        local _googleTTS = _radio.googleTTS or true
         ctld.logTrace(string.format("calling STTS.TextToSpeech(%s)", ctld.p(_shortMessage)))
         ctld.logTrace(string.format("_freq=%s", ctld.p(_freq)))
         ctld.logTrace(string.format("_modulation=%s", ctld.p(_modulation)))
@@ -5416,7 +5419,7 @@ function ctld.notifyCoalition(_message, _displayFor, _side, _radio, _shortMessag
         ctld.logTrace(string.format("_culture=%s", ctld.p(_culture)))
         ctld.logTrace(string.format("_voice=%s", ctld.p(_voice)))
         ctld.logTrace(string.format("_googleTTS=%s", ctld.p(_googleTTS)))
-        STTS.TextToSpeech(_shortMessage, _freq, _modulation, _volume, _name, _side, nil, 1, _gender, _culture, _voice, _googleTTS)
+        STTS.TextToSpeech(_shortMessage, _freq, _modulation, _volume, _name, _side, nil, 0.8, _gender, _culture, _voice, _googleTTS)
     end
 
     trigger.action.outTextForCoalition(_side, _message, _displayFor)
@@ -5810,18 +5813,18 @@ function ctld.getJTACStatus(_args)
             end
 
             if _enemyUnit ~= nil and _enemyUnit:getLife() > 0 and _enemyUnit:isActive() == true then
-                _message = _message .. "" .. _start .. " targeting " .. _enemyUnit:getTypeName() .. " CODE: " .. _laserCode .. ctld.getPositionString(_enemyUnit) .. "\n"
+                _message = _message .. "" .. _start .. " targeting " .. _enemyUnit:getTypeName() .. ". LASER " .. _laserCode .. ctld.getPositionString(_enemyUnit) .. "\n"
 
                 local _list = ctld.listNearbyEnemies(_jtacUnit)
 
-                if _list then
-                    _message = _message.."Visual On: "
+                --if _list then
+                --    _message = _message.."Visual On: "
 
-                    for _,_type in pairs(_list) do
-                        _message = _message.._type.." "
-                    end
-                    _message = _message.."\n"
-                end
+                --    for _,_type in pairs(_list) do
+                --       _message = _message.._type.." "
+                --    end
+                --    _message = _message.."\n"
+                --end
 
             else
                 _message = _message .. "" .. _start .. " searching for targets" .. ctld.getPositionString(_jtacUnit) .. "\n"
@@ -5834,7 +5837,7 @@ function ctld.getJTACStatus(_args)
     end
 
 
-    ctld.notifyCoalition(_message, 10, _side)
+    ctld.notifyCoalition(_message, 25, _side)
 end
 
 
@@ -6086,13 +6089,17 @@ function ctld.getPositionString(_unit)
     local _lat, _lon = coord.LOtoLL(_unit:getPosition().p)
 
     local _latLngStr = mist.tostringLL(_lat, _lon, 3, ctld.location_DMS)
+	
+	local _elevation = math.floor(_unit:getPoint().y+0.5)
 
-    local _mgrsString = mist.tostringMGRS(coord.LLtoMGRS(coord.LOtoLL(_unit:getPosition().p)), 5)
+    local _mgrsString = mist.tostringMGRS(coord.LLtoMGRS(coord.LOtoLL(_unit:getPosition().p)), 3)
 
-    return " @ " .. _latLngStr .. " - MGRS " .. _mgrsString
+    return " @ " .. _latLngStr .. " Elevation " .. _elevation .. " Meters. " .. _mgrsString
 end
 
+function ctld.getPositionMessageForVoice(_unit)
 
+end
 -- ***************** SETUP SCRIPT ****************
 function ctld.initialize(force)
     ctld.logInfo(string.format("Initializing version %s", ctld.Version))
@@ -6434,3 +6441,14 @@ timer.scheduleFunction(ctld.initialize, nil, timer.getTime() + 2)
 --            env.info(tostring(key))
 --            env.info(tostring(value))
 --        end
+
+function ctld.split (inputstr, sep)
+        if sep == nil then
+                sep = "%s"
+        end
+        local t={}
+        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+                table.insert(t, str)
+        end
+        return t
+end

@@ -67,7 +67,7 @@ STTS = {}
 -- FULL Path to the FOLDER containing DCS-SR-ExternalAudio.exe - EDIT TO CORRECT FOLDER
 STTS.DIRECTORY = "G:\\Dropbox\\Games\\DCS\\SRS_install"
 STTS.SRS_PORT = 5002 -- LOCAL SRS PORT - DEFAULT IS 5002
-STTS.GOOGLE_CREDENTIALS = "C:\\Users\\Ciaran\\Downloads\\googletts.json"
+STTS.GOOGLE_CREDENTIALS = "H:\\Apps\\googletts.json"
 
 -- DONT CHANGE THIS UNLESS YOU KNOW WHAT YOU'RE DOING
 STTS.EXECUTABLE = "DCS-SR-ExternalAudio.exe"
@@ -173,9 +173,9 @@ function STTS.TextToSpeech(message,freqs,modulations, volume,name, coalition,poi
 
         cmd = cmd .. string.format(" -L %s -O %s -A %s",lat,lon,alt)        
     end
-
+	
     cmd = cmd ..string.format(" -t \"%s\"",message)
-
+	
     if string.len(cmd) > 255 then
         local filename = os.getenv('TMP') .. "\\DCS_STTS-" .. STTS.uuid() .. ".bat"
         local script = io.open(filename,"w+")
@@ -187,8 +187,8 @@ function STTS.TextToSpeech(message,freqs,modulations, volume,name, coalition,poi
 
     if string.len(cmd) > 255 then
          env.info("[DCS-STTS] - cmd string too long")
-         env.info("[DCS-STTS] TextToSpeech Command :\n" .. cmd.."\n")
     end
+	
     os.execute(cmd)
 
     return STTS.getSpeechTime(message,speed,googleTTS)
