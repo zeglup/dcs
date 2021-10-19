@@ -5408,8 +5408,8 @@ function ctld.notifyCoalition(_message, _displayFor, _side, _radio, _shortMessag
         local _name = _radio.name or "JTAC"
         local _gender = _radio.gender or "male"
         local _culture = _radio.culture or "en-US"
-        local _voice = _radio.voice or "en-US-Wavenet-D"
-        local _googleTTS = _radio.googleTTS or true
+        local _voice = _radio.voice
+        local _googleTTS = _radio.googleTTS or false
         ctld.logTrace(string.format("calling STTS.TextToSpeech(%s)", ctld.p(_shortMessage)))
         ctld.logTrace(string.format("_freq=%s", ctld.p(_freq)))
         ctld.logTrace(string.format("_modulation=%s", ctld.p(_modulation)))
