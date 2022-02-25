@@ -236,7 +236,7 @@ _SETTINGS:SetPlayerMenuOff()
 local MenuRed = MENU_MISSION:New( "ROUGE" )
 local MenuBlue = MENU_MISSION:New( "BLEU" )
 local MenuSupport = MENU_MISSION:New( "SUPPORT" )
-local MenuTest = MENU_MISSION:New( "TESTS" )
+
 MENU_MISSION_COMMAND:New( "Mig-21", MenuRed, ActivateRedCap, "Mig-21" )
 MENU_MISSION_COMMAND:New( "Su-27", MenuRed, ActivateRedCap, "Su-27" )
 MENU_MISSION_COMMAND:New( "Mig-29", MenuRed, ActivateRedCap, "Mig-29" )
@@ -257,9 +257,9 @@ MENU_MISSION_COMMAND:New( "AWACS ROUGE", MenuSupport, ActivateOverlord )
 MENU_MISSION_COMMAND:New( "TANKER BLEU", MenuSupport, ActivateTexaco )
 MENU_MISSION_COMMAND:New( "TANKER ROUGE", MenuSupport, ActivateArco )
 
-MENU_MISSION_COMMAND:New( "POULET BLEU", MenuTest, ActivateGroup, "poulet1" )
-MENU_MISSION_COMMAND:New( "POULET ROUGE", MenuTest, ActivateGroup, "poulet2" )
-MENU_MISSION_COMMAND:New( "PORC ROUGE", MenuTest, ActivateGroup, "porc1" )
+--MENU_MISSION_COMMAND:New( "POULET BLEU", MenuTest, ActivateGroup, "poulet1" )
+--MENU_MISSION_COMMAND:New( "POULET ROUGE", MenuTest, ActivateGroup, "poulet2" )
+--MENU_MISSION_COMMAND:New( "PORC ROUGE", MenuTest, ActivateGroup, "porc1" )
 
 
 
