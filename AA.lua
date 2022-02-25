@@ -191,3 +191,13 @@ HQ = GROUP:FindByName( "HQ", "Bravo HQ" )
 CommandCenter = COMMANDCENTER:New( HQ, "Lima" )
 
 Scoring = SCORING:New( "Detect Demo" )
+
+
+
+--BASE:TraceClass("SET_CLIENT")
+--BASE:TraceClass("AIBALANCER")
+--BASE:TraceClass("SET_AIRBASE")
+--BASE:TraceClass("PATROLZONE")
+--BASE:TraceAll(true)
+BASE:TraceLevel( 3 )
+BASE:TraceClass( "SPAWN" )
