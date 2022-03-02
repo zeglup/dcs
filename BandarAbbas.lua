@@ -21,6 +21,9 @@ FrontLine2Zone = ZONE_POLYGON:New( "SpawnFront2", FrontLine2Group )
 
 TBOLT_set = SET_CLIENT:New():FilterCoalitions( "blue" ):FilterCategories( "plane" ):FilterPrefixes( "TBOLT" ):FilterActive():FilterStart()
 
+TBOLT1Group = GROUP:FindByName('TBOLT 1')
+TBOLT2Group = GROUP:FindByName('TBOLT 2')
+
 ratioAGPerPlayer = 4
 
 
@@ -162,7 +165,7 @@ local function ActivateGroundTargets()
 
 
     maxGroundTargets = TBOLT_set:CountAlive() * ratioAGPerPlayer
-    BASE:E("maxGround" .. tostring(maxGroundTargets))
+
     FrontLine1Templates = { "BTR", "T-55", "M113", "BMP", "T-72"}
 
     FrontLine1Spawn = SPAWN:New("BTR")
@@ -172,20 +175,35 @@ local function ActivateGroundTargets()
                                :SpawnScheduled( 2, 1)
                                :OnSpawnGroup(
                                 function( SpawnGroup )
-                                    SpawnGroup:SetCommandImmortal(true)
+                                    --SpawnGroup:SetCommandImmortal(true)
+
+
+                                    -- Try detect TBOLT hit to remove Immortal
                                     SpawnUnits = SpawnGroup:GetUnits()
                                     for i = 1, #SpawnUnits do
                                         local unit = SpawnGroup:GetUnit( i )
                                         unit:HandleEvent( EVENTS.Hit )
                                         function unit:OnEventHit( EventData )
-                                            BASE:E(EventData.IniUnitName)
-                                            if(nil ~= string.find(EventData.IniUnitName, "TBOLT")) then
-                                                SpawnGroup:SetCommandImmortal(false)
-                                                unit:Explode(500, .1)
-                                                BASE:E(EventData.IniUnitName)
-                                            end
+                                            --BASE:E(EventData.IniUnitName)
+                                            --if(nil ~= string.find(EventData.IniUnitName, "TBOLT")) then
+                                            --    SpawnGroup:SetCommandImmortal(false)
+                                            --    unit:Explode(500, .1)
+                                            --    BASE:E(EventData.IniUnitName)
+                                            --end
                                         end
                                     end
+
+                                    -- OR TBOLT in zone
+
+                                    SCHEDULER:New( nil,
+                                            function()
+                                                if(TBOLT1Group:IsPartlyInZone(YellowZone) or TBOLT2Group:IsPartlyInZone(YellowZone)) then
+                                                    -- DO SPAWN GROUP TARGETS
+                                                    SpawnGroup:SetCommandImmortal(false)
+                                                end
+                                            end, {}, 1, 1
+                                    )
+
                                 end
     )
 
