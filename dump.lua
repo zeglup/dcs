@@ -201,3 +201,58 @@ Scoring = SCORING:New( "Detect Demo" )
 --BASE:TraceAll(true)
 BASE:TraceLevel( 3 )
 BASE:TraceClass( "SPAWN" )
+
+-----
+
+local TBOLTUnits = {
+    UNIT:FindByName("TBOLT" .. tagName .. " 1-1"),
+    UNIT:FindByName("TBOLT" .. tagName .. " 1-2"),
+    UNIT:FindByName("TBOLT" .. tagName .. " 1-3"),
+    UNIT:FindByName("TBOLT" .. tagName .. " 1-4"),
+    UNIT:FindByName("TBOLT" .. tagName .. " HOT 1-1"),
+    UNIT:FindByName("TBOLT" .. tagName .. " HOT 1-2"),
+    UNIT:FindByName("TBOLT" .. tagName .. " HOT 1-3"),
+    UNIT:FindByName("TBOLT" .. tagName .. " HOT 1-4"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " M2000 1-1"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " M2000 1-2"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " M2000 1-3"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " M2000 1-4"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " HOT M2000 1-1"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " HOT M2000 1-2"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " HOT M2000 1-3"),
+    UNIT:FindByName( "TBOLT" .. tagName .. " HOT M2000 1-4")
+}
+for i,group in pairs(TBOLTGroups) do
+    if( group ~= nil) then
+        group:SetCommandImmortal( switch )
+    end
+end
+
+if( switch ) then
+    for i,unit in pairs(TBOLTUnits) do
+        if unit then
+            unit:HandleEvent( EVENTS.Hit )
+            function unit:OnEventHit( EventData )
+                if(nil == string.find(EventData.WeaponName, "weapons.shells")) then
+                    local iniName = EventData.IniTypeName
+                    local unitName = unit:GetName()
+                    if (nil ~= EventData.IniPlayerName) then
+                        iniName = EventData.IniPlayerName
+                    end
+                    if (nil ~= unit:GetPlayerName()) then
+                        unitName = unit:GetPlayerName()
+                    end
+
+                    MESSAGE:New( "Alerte : " .. iniName .. " a tué " .. unitName .. " avec un " .. EventData.WeaponName .. " !" , 15 ):ToAll()
+
+                    unitGroup = unit:GetGroup()
+                    unitGroup:SetCommandInvisible(true)
+
+                    MESSAGE:New( "Vous êtes mort ! Veuillez retourner en Zone " .. zoneName, 15 ):ToGroup( unitGroup )
+                else
+                    -- Hit by mike mike
+                end
+            end
+        end
+    end
+end

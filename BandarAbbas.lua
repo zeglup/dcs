@@ -21,11 +21,13 @@ FrontLine2Zone = ZONE_POLYGON:New( "SpawnFront2", FrontLine2Group )
 
 TBOLT_set = SET_CLIENT:New():FilterCoalitions( "blue" ):FilterCategories( "plane" ):FilterPrefixes( "TBOLT" ):FilterActive():FilterStart()
 
-TBOLT1Group = GROUP:FindByName('TBOLT 1')
-TBOLT2Group = GROUP:FindByName('TBOLT 2')
+UZI_set = SET_CLIENT:New():FilterCoalitions( "blue" ):FilterCategories( "plane" ):FilterPrefixes( "UZI" ):FilterActive():FilterStart()
+
+TBOLTGroup = GROUP:FindByName('TBOLT')
+UZIGroup = GROUP:FindByName('UZI')
 
 ratioAGPerPlayer = 4
-
+RedCapTemplate = { "Mig21", "F-5E" }
 
 local function StartGroup( groupName )
     local group = GROUP:FindByName( groupName )
@@ -38,9 +40,6 @@ local function ActiveGroup( groupName )
 end
 
 local function ActivateRedCap( groupName )
-    --
-    -- Spawn CAP
-    --
     local PatrolZones = {}
 
     RedCapSpawn = SPAWN
@@ -55,7 +54,7 @@ local function ActivateRedCap( groupName )
         PatrolZones[spawnGroup]:__Start( 5 )
     end
     )
-    local num = TBOLT_set:CountAlive() + 1
+    local num = UZI_set:CountAlive() + 1
     for i=1, num, 1 do
         RedCapSpawn:Spawn()
     end
@@ -130,15 +129,15 @@ local function ActivateAAA()
 
     AAATemplates = { "ZU-23", "ZSU-57", "Shilka", "AAA" }
 
-    AAAZones = { AAAZone1, AAAZone2, AAAZone3, AAAZone4 }
+    AAAZones = { AAAZone1, AAAZone2, AAAZone4 }
     AAASpawn = SPAWN:New("ZU-23")
-                          :InitLimit( maxGroundTargets , maxGroundTargets )
+                          :InitLimit( maxGroundTargets , 0 )
                           :InitRandomizeTemplate( AAATemplates )
                           :InitRandomizeZones( AAAZones )
                           :SpawnScheduled( 2, 1)
 
     ManpadSpawn = SPAWN:New("MANPAD")
-                    :InitLimit( maxGroundTargets * 2 , maxGroundTargets * 2 )
+                    :InitLimit( maxGroundTargets * 2 , 0 )
                     :InitRandomizeZones( { AAAZones } )
                     :SpawnScheduled( 2, 1)
 end
@@ -164,71 +163,29 @@ local function ActivateGroundTargets()
     end
 
 
-    maxGroundTargets = TBOLT_set:CountAlive() * ratioAGPerPlayer
+    local maxGroundTargets = TBOLT_set:CountAlive() * ratioAGPerPlayer
 
-    FrontLine1Templates = { "BTR", "T-55", "M113", "BMP", "T-72"}
+    local FrontLine1Templates = { "BTR", "T-55", "M113", "BMP", "T-72"}
 
-    FrontLine1Spawn = SPAWN:New("BTR")
-                               :InitLimit( maxGroundTargets , maxGroundTargets )
+    local FrontLine1Spawn = SPAWN:New("BTR")
+                               :InitLimit( maxGroundTargets , 0 )
                                :InitRandomizeTemplate( FrontLine1Templates )
                                :InitRandomizeZones( { FrontLine1Zone } )
                                :SpawnScheduled( 2, 1)
-                               :OnSpawnGroup(
-                                function( SpawnGroup )
-                                    --SpawnGroup:SetCommandImmortal(true)
 
-
-                                    -- Try detect TBOLT hit to remove Immortal
-                                    SpawnUnits = SpawnGroup:GetUnits()
-                                    for i = 1, #SpawnUnits do
-                                        local unit = SpawnGroup:GetUnit( i )
-                                        unit:HandleEvent( EVENTS.Hit )
-                                        function unit:OnEventHit( EventData )
-                                            --BASE:E(EventData.IniUnitName)
-                                            --if(nil ~= string.find(EventData.IniUnitName, "TBOLT")) then
-                                            --    SpawnGroup:SetCommandImmortal(false)
-                                            --    unit:Explode(500, .1)
-                                            --    BASE:E(EventData.IniUnitName)
-                                            --end
-                                        end
-                                    end
-
-                                    -- OR TBOLT in zone
-
-                                    SCHEDULER:New( nil,
-                                            function()
-                                                if(TBOLT1Group:IsPartlyInZone(YellowZone) or TBOLT2Group:IsPartlyInZone(YellowZone)) then
-                                                    -- DO SPAWN GROUP TARGETS
-                                                    SpawnGroup:SetCommandImmortal(false)
-                                                end
-                                            end, {}, 1, 1
-                                    )
-
-                                end
-    )
-
-    FrontLine2Spawn = SPAWN:New("MLRS")
-                           :InitLimit( 2 , 2 )
+    local FrontLine2Spawn = SPAWN:New("MLRS")
+                           :InitLimit( 2 , 0 )
                            :InitRandomizeZones( { FrontLine2Zone } )
                            :SpawnScheduled( 2, 1)
-                           :OnSpawnGroup(
-                                function( SpawnGroup )
-                                    SpawnGroup:SetCommandImmortal(true)
-                                end
-    )
 
-    InfSpawn = SPAWN:New("Inf")
-                           :InitLimit( 30 , 50 )
+
+    local InfSpawn = SPAWN:New("Inf")
+                           :InitLimit( 30 , 0 )
                            :InitRandomizeZones( { FrontLine1Zone } )
                            :SpawnScheduled( 2, 0.5)
-                           :OnSpawnGroup(
-                                function( SpawnGroup )
-                                    SpawnGroup:SetCommandImmortal(true)
-                                end
-    )
 
 
-    SA15Group = GROUP:FindByName("SA15")
+    local SA15Group = GROUP:FindByName("SA15")
     SA15Group:SetAIOff()
     SA15Group:Activate()
 
@@ -244,22 +201,6 @@ RescueHeloTruman:Start()
 
 local RescueHeloStennis = RESCUEHELO:New("STENNIS", "Rescue Helo")
 RescueHeloStennis:Start()
-
-
--- Texaco Stennis
---
---TexacoStennis=RECOVERYTANKER:New(UNIT:FindByName("STENNIS"), "Texaco")
---TexacoStennis:SetTakeoffAir()
---TexacoStennis:SetTACAN(12, "TXC")
---TexacoStennis:SetRadio(261)
---TexacoStennis:SetCallsign(CALLSIGN.Tanker.Texaco)
---TexacoStennis:SetRespawnInAir()
---TexacoStennis:__Start(3)
---
---
---
---UNIT:FindByName("TRUMAN"):PatrolRoute()
---UNIT:FindByName("STENNIS"):PatrolRoute()
 
 --
 -- Menu
