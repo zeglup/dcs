@@ -39,10 +39,17 @@ local function ActiveRadar()
 end
 
 
-local function ActiveAA()
-	ActiveGroup("MANPAD")
+local function ActiveMANPADS()
+	ActiveGroup("MANPAD1")
+	ActiveGroup("MANPAD2")
 	ActiveGroup("ZU23")
-	MESSAGE:New( "DEFENSE AA ACTIVE", 5 ):ToBlue()
+	MESSAGE:New( "DEFENSE MANPADS ACTIVE", 5 ):ToBlue()
+end
+
+local function ActiveAAA()
+	ActiveGroup("ZU231")
+	ActiveGroup("ZU232")
+	MESSAGE:New( "DEFENSE AAA ACTIVE", 5 ):ToBlue()
 end
 
 local function RoeOffensive()
@@ -94,8 +101,6 @@ local MenuSupport = MENU_COALITION:New( coalition.side.BLUE, "SUPPORT" )
 local MenuCap = MENU_COALITION:New( coalition.side.BLUE, "CAP" )
 local MenuSead = MENU_COALITION:New( coalition.side.BLUE, "SEAD" )
 local MenuTba = MENU_COALITION:New( coalition.side.BLUE, "TBA" )
-local MenuRange = MENU_COALITION:New( coalition.side.BLUE, "RANGE" )
-local MenuSamOptions = MENU_COALITION:New( coalition.side.BLUE, "Options", MenuSead )
 
 
 ---
@@ -103,19 +108,20 @@ local MenuSamOptions = MENU_COALITION:New( coalition.side.BLUE, "Options", MenuS
 ---
 MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Départ Overlord", MenuSupport, StartGroup, "Overlord" )
 MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Départ Texaco", MenuSupport, StartGroup, "Texaco" )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Départ Arco", MenuSupport, StartGroup, "Arco" )
 
 ---
 --- SEAD
 ---
 MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation SAM", MenuSead, ActiveSam )
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "ROE Offensif", MenuSamOptions, RoeOffensive )
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "ROE Hold", MenuSamOptions, RoeHold )
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Anti missile ON", MenuSamOptions, AntiMslOn )
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Anti missile OFF", MenuSamOptions, AntiMslOff )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "ROE Offensif", MenuSead, RoeOffensive )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "ROE Hold", MenuSead, RoeHold )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Anti missile ON", MenuSead, AntiMslOn )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Anti missile OFF", MenuSead, AntiMslOff )
 
 ---
 --- CAP
----
+--- 
 MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Mig-21*2", MenuCap, StartGroup, "Mig-21*2" )
 MENU_COALITION_COMMAND:New( coalition.side.BLUE, "F-4E", MenuCap, StartGroup, "F-4E" )
 MENU_COALITION_COMMAND:New( coalition.side.BLUE, "F-16 DF", MenuCap, StartGroup, "F-16 DF" )
@@ -128,15 +134,11 @@ MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Mi-8*3", MenuCap, StartGroup, 
 ---
 --- TBA
 ---
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation du radar", MenuTba, ActiveRadar )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation du radar de tracking", MenuTba, ActiveRadar )
 MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Fumée sur objectif", MenuTba, ActiveSmoke )
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation des défenses AA", MenuTba, ActiveAA )
----
---- TBA
----
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation du radar", MenuTba, ActiveRadar )
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Fumée sur objectif", MenuTba, ActiveSmoke )
-MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation des défenses AA", MenuTba, ActiveAA )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation MANPADS", MenuTba, ActiveMANPADS )
+MENU_COALITION_COMMAND:New( coalition.side.BLUE, "Activation AAA", MenuTba, ActiveAAA )
+
 
 ---
 --- Restart mission
@@ -149,8 +151,8 @@ local SchedulerAddRestart = SCHEDULER:New( nil, AddRestartMenu, {}, 1800, 0 )
 ---
 
 local RescueHeloRoosevelt = RESCUEHELO:New("Roosevelt", "Rescue Helo")
-RescueHeloStennis:SetOffsetX(100)
-RescueHeloStennis:SetOffsetZ(-300)
+RescueHeloRoosevelt:SetOffsetX(100)
+RescueHeloRoosevelt:SetOffsetZ(-300)
 RescueHeloRoosevelt:Start()
 
 
