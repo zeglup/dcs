@@ -1205,7 +1205,7 @@ warehouses_lua = to_lua(warehouses, "warehouses")
 persistence_path = os.path.join(OUT_DIR, "persistence.lua")
 kb_dir = os.path.join(OUT_DIR, "kneeboards")
 
-for cfg in MISSIONS[:1]:
+for cfg in MISSIONS:
     miz_path = os.path.join(OUT_DIR, cfg["filename"])
     mission = make_mission_table(cfg)
     mission_lua = to_lua(mission, "mission")

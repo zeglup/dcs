@@ -74,6 +74,10 @@ Or delete the entire directory:
 ## Mission Completion Criteria
 
 Mission 1 (Sledgehammer): Destroy Abu Musa SA-6 (group 20) AND Greater Tunb HAWK (group 22)
+Mission 2 (Iron Fist): Destroy Abu Musa AAA (group 21) AND Qeshm SA-2 (group 23)
+Mission 3 (Blind Eagle): Destroy Qeshm EWR (group 24)
+Mission 4 (Thunder Run): Destroy all remaining tracked groups (groups 20-24)
+Mission 5 (Persian Storm): Destroy all remaining tracked groups (groups 20-24)
 
 ## Tracked Groups
 

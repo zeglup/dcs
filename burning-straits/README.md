@@ -142,7 +142,7 @@ OUTLAWS 1-1 / 1-2 (AH-64D, Hellfire, rockets) insert low-level from the south us
 
 ---
 
-### Mission 2 — "Trident"
+### Mission 2 — "Iron Fist"
 
 **Type:** Anti-Ship Strike
 **Time:** 0530L
@@ -165,7 +165,7 @@ OUTLAWS 1-1 / 1-2 (AH-64D, Hellfire x16 each) operate in the littoral zone betwe
 
 ---
 
-### Mission 3 — "Chainmail"
+### Mission 3 — "Blind Eagle"
 
 **Type:** Defensive Counter-Air / Fleet Defense
 **Time:** 0600L (rotating CAP)
@@ -194,7 +194,7 @@ OUTLAWS 1-1 / 1-2 (AH-64D, Stinger, Hellfire, gun) deploy to FARP "Oasis" on Sir
 
 ---
 
-### Mission 4 — "Copperhead"
+### Mission 4 — "Thunder Run"
 
 **Type:** Anti-Surface Warfare / Littoral Strike
 **Time:** 0700L
@@ -217,7 +217,7 @@ OUTLAWS 1-1 / 1-2 (AH-64D, Hellfire, rockets, gun) are the primary anti-surface 
 
 ---
 
-### Mission 5 — "Nightfall"
+### Mission 5 — "Persian Storm"
 
 **Type:** Deep Strike (Night)
 **Time:** 2100L
